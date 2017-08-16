@@ -1,0 +1,25 @@
+# All action links for this module
+# vr_view entity
+
+vr_view.vr_view_add:
+  # Which route will be called by the link
+  route_name: entity.vr_view.add_form
+  title: 'Add VR View'
+
+  # Where will the link appear, defined by route name.
+  appears_on:
+    - entity.vr_view.collection
+    - entity.vr_view.canonical
+
+# All action links for this module
+# vr_hotspot entity
+
+vr_hotspot.vr_hotspot_add:
+  # Which route will be called by the link
+  route_name: entity.vr_hotspot.add_form
+  title: 'Add VR Hotspot'
+
+  # Where will the link appear, defined by route name.
+  appears_on:
+    - entity.vr_hotspot.collection
+    - entity.vr_hotspot.canonical

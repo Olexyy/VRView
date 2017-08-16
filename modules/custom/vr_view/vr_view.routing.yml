@@ -1,0 +1,131 @@
+# Route name can be used in several places; e.g. links, redirects, and local actions.
+# vr_view entity
+
+entity.vr_view.canonical:
+  path: '/vr_view/{vr_view}'
+  defaults:
+  # Calls the view controller, defined in the annotation of the contact entity
+    _entity_view: 'vr_view'
+    _title: 'VR View Content'
+  requirements:
+  # Calls the access controller of the entity, $operation 'view'
+    _entity_access: 'vr_view.view'
+
+entity.vr_view.collection:
+  path: '/vr_view/list'
+  defaults:
+  # Calls the list controller, defined in the annotation of the contact entity.
+    _entity_list: 'vr_view'
+    _title: 'VR View List'
+  requirements:
+  # Checks for permission directly.
+    _permission: 'view vr_view entity'
+
+entity.vr_view.add_form:
+  path: '/vr_view/add'
+  defaults:
+  # Calls the form.add controller, defined in the vr_view entity.
+    _entity_form: vr_view.add
+    _title: 'Add VR View'
+  requirements:
+    _entity_create_access: 'vr_view'
+# NON convention create vr_view, add hotspot based on params to existing vr_view
+entity.vr_view.add_form_params:
+  path: '/vr_view/add/{vr_view_id}/{pitch}/{yaw}'
+  defaults:
+    _entity_form: vr_view.add
+    _title: 'Add VR View to existing'
+  requirements:
+    _entity_create_access: 'vr_view'
+# NON convention form (here we create hotspot(child vr_view), attach to parent vr_view, and redirect to parent)
+entity.vr_hotspot.add_form_params:
+    path: '/vr_hotspot/{vr_view_id_parent}/{vr_view_id_child}'
+    defaults:
+      _title: 'Extend new VR View'
+      _entity_form: vr_hotspot.add
+    requirements:
+      _entity_create_access: 'vr_hotspot'
+
+entity.vr_view.edit_form:
+  path: '/vr_view/{vr_view}/edit'
+  defaults:
+  # Calls the form.edit controller, defined in the vr_view entity.
+    _entity_form: vr_view.edit
+    _title: 'Edit VR View'
+  requirements:
+    _entity_access: 'vr_view.edit'
+
+entity.vr_view.delete_form:
+  path: '/vr_view/{vr_view}/delete'
+  defaults:
+    # Calls the form.delete controller, defined in the vr_view entity.
+    _entity_form: vr_view.delete
+    _title: 'Delete VR View'
+  requirements:
+    _entity_access: 'vr_view.delete'
+
+vr_view.vr_view_settings:
+  path: 'admin/structure/vr_view_settings'
+  defaults:
+    _form: '\Drupal\vr_view\Form\VRViewSettingsForm'
+    _title: 'VR View Settings'
+  requirements:
+    _permission: 'administer vr_view entity'
+
+# Route name can be used in several places; e.g. links, redirects, and local actions.
+# vr_hotspot
+
+entity.vr_hotspot.canonical:
+  path: '/vr_hotspot/{vr_hotspot}'
+  defaults:
+  # Calls the view controller, defined in the annotation of the contact entity
+    _entity_view: 'vr_hotspot'
+    _title: 'VR Hotspot Content'
+  requirements:
+  # Calls the access controller of the entity, $operation 'view'
+    _entity_access: 'vr_hotspot.view'
+
+entity.vr_hotspot.collection:
+  path: '/vr_hotspot/list'
+  defaults:
+  # Calls the list controller, defined in the annotation of the contact entity.
+    _entity_list: 'vr_hotspot'
+    _title: 'VR Hotspot List'
+  requirements:
+  # Checks for permission directly.
+    _permission: 'view vr_hotspot entity'
+
+entity.vr_hotspot.add_form:
+  path: '/vr_hotspot/add'
+  defaults:
+  # Calls the form.add controller, defined in the vr_hotspot entity.
+    _entity_form: vr_hotspot.add
+    _title: 'Add VR Hotspot'
+  requirements:
+    _entity_create_access: 'vr_hotspot'
+
+entity.vr_hotspot.edit_form:
+  path: '/vr_hotspot/{vr_hotspot}/edit'
+  defaults:
+  # Calls the form.edit controller, defined in the vr_hotspot entity.
+    _entity_form: vr_hotspot.edit
+    _title: 'Edit VR Hotspot'
+  requirements:
+    _entity_access: 'vr_hotspot.edit'
+
+entity.vr_hotspot.delete_form:
+  path: '/vr_hotspot/{vr_hotspot}/delete'
+  defaults:
+    # Calls the form.delete controller, defined in the vr_hotspot entity.
+    _entity_form: vr_hotspot.delete
+    _title: 'Delete VR Hotspot'
+  requirements:
+    _entity_access: 'vr_hotspot.delete'
+
+vr_hotspot.vr_hotspot_settings:
+  path: 'admin/structure/vr_hotspot_settings'
+  defaults:
+    _form: '\Drupal\vr_view\Form\VRHotspotSettingsForm'
+    _title: 'VR Hotspot Settings'
+  requirements:
+    _permission: 'administer vr_hotspot entity'

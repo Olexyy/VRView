@@ -1,0 +1,10 @@
+name: VR View
+type: module
+description: 'Implementation of VR view entity.'
+package: VR
+core: 8.x
+
+dependencies:
+  - options
+#  - entity_reference
+#  - examples

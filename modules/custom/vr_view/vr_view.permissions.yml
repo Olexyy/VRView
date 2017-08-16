@@ -1,0 +1,11 @@
+view vr_view entity:
+  title: 'View VR view entity'
+add vr_view entity:
+  title: 'Add VR view entity'
+edit vr_view entity:
+  title: 'Edit VR view entity'
+delete vr_view entity:
+  title: 'Delete VR view entity'
+administer vr_view entity:
+  title: 'Administer VR view entity'
+  restrict access: TRUE

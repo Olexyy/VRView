@@ -1,0 +1,47 @@
+# Define the 'local' links for the module
+# vr_view entity
+
+vr_view.settings_tab:
+  route_name: vr_view.vr_view_settings
+  title: Settings
+  base_route: vr_view.vr_view_settings
+
+vr_view.view:
+  route_name: entity.vr_view.canonical
+  base_route: entity.vr_view.canonical
+  title: View
+
+vr_view.page_edit:
+  route_name: entity.vr_view.edit_form
+  base_route: entity.vr_view.canonical
+  title: Edit
+
+vr_view.delete_confirm:
+  route_name:  entity.vr_view.delete_form
+  base_route:  entity.vr_view.canonical
+  title: Delete
+  weight: 10
+
+# Define the 'local' links for the module
+# vr_hotspot entity
+
+vr_hotspot.settings_tab:
+  route_name: vr_hotspot.vr_hotspot_settings
+  title: Settings
+  base_route: vr_hotspot.vr_hotspot_settings
+
+vr_hotspot.view:
+  route_name: entity.vr_hotspot.canonical
+  base_route: entity.vr_hotspot.canonical
+  title: View
+
+vr_hotspot.page_edit:
+  route_name: entity.vr_hotspot.edit_form
+  base_route: entity.vr_hotspot.canonical
+  title: Edit
+
+vr_hotspot.delete_confirm:
+  route_name:  entity.vr_hotspot.delete_form
+  base_route:  entity.vr_hotspot.canonical
+  title: Delete
+  weight: 10

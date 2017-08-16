@@ -1,0 +1,27 @@
+# Define the menu links for this module
+# vr_view entity
+
+entity.vr_view.collection:
+  title: 'VR View: VR Views Listing'
+  route_name: entity.vr_view.collection
+  description: 'List VR Views'
+  weight: 10
+vr_view.admin.structure.settings:
+  title: 'VR View Settings'
+  description: 'Configure VR view entity'
+  route_name:  vr_view.vr_view_settings
+  parent: system.admin_structure
+
+# Define the menu links for this module
+# vr_hotspot entity
+
+entity.vr_hotspot.collection:
+  title: 'VR Hotspot: VR Hotspots Listing'
+  route_name: entity.vr_hotspot.collection
+  description: 'List VR Hotspots'
+  weight: 10
+vr_hotspot.admin.structure.settings:
+  title: 'VR Hotspot Settings'
+  description: 'Configure VR hotspot entity'
+  route_name:  vr_hotspot.vr_hotspot_settings
+  parent: system.admin_structure

@@ -1,0 +1,8 @@
+vr_library:
+    version: 1.x
+    css:
+        layout:
+            vr_library/vr_style.css: {}
+    js:
+        vr_library/build/vrview.js:  {preprocess: false}
+        vr_library/init.js:  {preprocess: false}
