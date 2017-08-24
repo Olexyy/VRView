@@ -243,11 +243,11 @@ class VRHotpot extends ContentEntityBase implements VrHotspotInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'string',
-        'weight' => -6,
+        'weight' => 0,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'string_textfield',
-        'weight' => -6,
+        'weight' => 0,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -264,53 +264,11 @@ class VRHotpot extends ContentEntityBase implements VrHotspotInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'float',
-        'weight' => -6,
+        'weight' => 0,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'number',
-        'weight' => -6,
-      ))
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', TRUE);
-
-    // Pitch field for the contact.
-    $fields['pitch'] = BaseFieldDefinition::create('float')
-      ->setLabel(t('Pitch'))
-      ->setDescription(t('The pitch property of the VR Hotspot entity.'))
-      ->setSettings(array(
-        'default_value' => 0,
-        'max_length' => 255,
-        'text_processing' => 0,
-      ))
-      ->setDisplayOptions('view', array(
-        'label' => 'above',
-        'type' => 'float',
-        'weight' => -6,
-      ))
-      ->setDisplayOptions('form', array(
-        'type' => 'number',
-        'weight' => -6,
-      ))
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', TRUE);
-
-    // Radius field for the contact.
-    $fields['radius'] = BaseFieldDefinition::create('float')
-      ->setLabel(t('Radius'))
-      ->setDescription(t('The radius property of the VR Hotspot entity.'))
-      ->setSettings(array(
-        'default_value' => 0,
-        'max_length' => 255,
-        'text_processing' => 0,
-      ))
-      ->setDisplayOptions('view', array(
-        'label' => 'above',
-        'type' => 'float',
-        'weight' => -6,
-      ))
-      ->setDisplayOptions('form', array(
-        'type' => 'number',
-        'weight' => -6,
+        'weight' => 0,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -327,11 +285,53 @@ class VRHotpot extends ContentEntityBase implements VrHotspotInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'float',
-        'weight' => -6,
+        'weight' => 0,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'number',
-        'weight' => -6,
+        'weight' => 0,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    // Pitch field for the contact.
+    $fields['pitch'] = BaseFieldDefinition::create('float')
+      ->setLabel(t('Pitch'))
+      ->setDescription(t('The pitch property of the VR Hotspot entity.'))
+      ->setSettings(array(
+        'default_value' => 0,
+        'max_length' => 255,
+        'text_processing' => 0,
+      ))
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'float',
+        'weight' => 0,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'number',
+        'weight' => 0,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    // Radius field for the contact.
+    $fields['radius'] = BaseFieldDefinition::create('float')
+      ->setLabel(t('Radius'))
+      ->setDescription(t('The radius property of the VR Hotspot entity.'))
+      ->setSettings(array(
+        'default_value' => 0,
+        'max_length' => 255,
+        'text_processing' => 0,
+      ))
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'float',
+        'weight' => 0,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'number',
+        'weight' => 0,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -346,7 +346,7 @@ class VRHotpot extends ContentEntityBase implements VrHotspotInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'entity_reference_label',
-        'weight' => -3,
+        'weight' => 0,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'entity_reference_autocomplete',
@@ -356,7 +356,7 @@ class VRHotpot extends ContentEntityBase implements VrHotspotInterface {
           'autocomplete_type' => 'tags',
           'placeholder' => '',
         ),
-        'weight' => -3,
+        'weight' => 0,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);

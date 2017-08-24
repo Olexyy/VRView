@@ -80,7 +80,9 @@ class VrViewForm extends ContentEntityForm {
         drupal_set_message($this->t('The VR View %feed has been added to current VR View.', [
           '%feed' => $parent_vr_view->toLink()->toString()
         ]));
-        $form_state->setRedirectUrl(Url::fromRoute('entity.vr_hotspot.add_form_params', [ $parent_vr_view->id(), $entity->id() ]));
+        $form_state->setRedirectUrl(Url::fromRoute('entity.vr_view.tie_back', [
+          'vr_view_id_child' => $parent_vr_view->id(), 'vr_view_id_parent' => $entity->id()
+        ]));
       }
       else {
         drupal_set_message($this->t('The VR View %feed has been created.', [

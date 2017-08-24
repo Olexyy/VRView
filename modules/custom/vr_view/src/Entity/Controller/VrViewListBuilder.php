@@ -55,7 +55,7 @@ class VrViewListBuilder extends EntityListBuilder {
   public function buildRow(EntityInterface $entity) {
     /* @var $entity \Drupal\vr_view\Entity\VrView */
     $row['id'] = $entity->id();
-    $row['name'] = $entity->name->value;
+    $row['name'] = $entity->toLink();
     $row['image'] = $entity->image->value;
     $row['is_stereo'] = $entity->is_stereo->value;
     $row['hotspots'] = $entity->hotspots->value;

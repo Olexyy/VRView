@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-Util = window.Util || {};
+var Util = window.Util || {};
 
 Util.isDataURI = function(src) {
   return src && src.indexOf('data:') == 0;
@@ -159,7 +159,7 @@ Util.isIOS9OrLess = function() {
 };
 
 Util.getExtension = function(url) {
-  return url.split('.').pop();
+  return url.split('.').pop().split('?')[0];
 };
 
 Util.createGetParams = function(params) {

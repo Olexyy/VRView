@@ -31,20 +31,20 @@ entity.vr_view.add_form:
     _entity_create_access: 'vr_view'
 # NON convention create vr_view, add hotspot based on params to existing vr_view
 entity.vr_view.add_form_params:
-  path: '/vr_view/add/{vr_view_id}/{pitch}/{yaw}'
+  path: '/vr_view/add/{vr_view_id}/{yaw}/{pitch}'
   defaults:
     _entity_form: vr_view.add
     _title: 'Add VR View to existing'
   requirements:
     _entity_create_access: 'vr_view'
-# NON convention form (here we create hotspot(child vr_view), attach to parent vr_view, and redirect to parent)
-entity.vr_hotspot.add_form_params:
-    path: '/vr_hotspot/{vr_view_id_parent}/{vr_view_id_child}'
+# NON conventional form for tie back just added vr view
+entity.vr_view.tie_back:
+    path: '/vr_view/tie_back/{vr_view_id_parent}/{vr_view_id_child}'
     defaults:
-      _title: 'Extend new VR View'
-      _entity_form: vr_hotspot.add
+      _title: 'Tie back VR View'
+      _form: 'Drupal\vr_view\Form\VrViewTieBackForm'
     requirements:
-      _entity_create_access: 'vr_hotspot'
+      _entity_create_access: 'vr_view'
 
 entity.vr_view.edit_form:
   path: '/vr_view/{vr_view}/edit'

@@ -131,6 +131,19 @@ use Drupal\user\UserInterface;
 class VrView extends ContentEntityBase implements VrViewInterface {
 
   /**
+   * @inheritdoc
+   *
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   * @param array $entities
+   */
+  public static function postDelete(EntityStorageInterface $storage, array $entities) {
+    parent::postDelete($storage, $entities);
+    foreach ($entities as $entity) {
+      \Drupal::entityTypeManager()->getStorage('vr_hotspot')->delete($entity->hotspots->referencedEntities());
+    }
+  }
+
+  /**
    * {@inheritdoc}
    *
    * When a new entity instance is added, set the user_id entity reference to
@@ -243,11 +256,35 @@ class VrView extends ContentEntityBase implements VrViewInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'string',
-        'weight' => -6,
+        'weight' => 0,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'string_textfield',
-        'weight' => -6,
+        'weight' => 0,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    // Description field for the contact.
+    $fields['description'] = BaseFieldDefinition::create('string_long')
+      ->setLabel(t('Description'))
+      ->setDescription(t('The description of the VR View entity.'))
+      ->setSettings(array(
+        'default_value' => '',
+        'max_length' => 1200,
+        'text_processing' => 0,
+      ))
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'string',
+        'weight' => 0,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'string_textarea',
+        'weight' => 0,
+        'settings' => [
+          'rows' => 6,
+        ],
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -278,6 +315,70 @@ class VrView extends ContentEntityBase implements VrViewInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    // Image of entity.
+    $fields['preview'] = BaseFieldDefinition::create('image')
+      ->setLabel(t('Preview'))
+      ->setDescription(t('Preview of the VR view entity.'))
+      ->setCardinality(1)
+      ->setSettings(array(
+        'file_directory' => 'IMAGE_FOLDER',
+        'alt_field_required' => FALSE,
+        'file_extensions' => 'png jpg jpeg',
+      ))
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'image',
+        'weight' => 0,
+        'settings' => array(
+          'type' => 'admin',
+        ),
+      ))
+      ->setDisplayOptions('form', array(
+        'label' => 'above',
+        'type' => 'image_image',
+        'weight' => 0,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    // Yaw field for the hotspot.
+    $fields['default_yaw'] = BaseFieldDefinition::create('float')
+      ->setLabel(t('Default yaw'))
+      ->setDescription(t('The default yaw property of the VR View entity.'))
+      ->setSettings(array(
+        'default_value' => 0,
+        'max_length' => 255,
+        'text_processing' => 0,
+      ))
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'float',
+        'weight' => 0,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'number',
+        'weight' => 0,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    // Is yaw only.
+    $fields['is_yaw_only'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Is yaw only'))
+      ->setDescription(t('Determines whether VR view entity is yaw only.'))
+      ->setDefaultValue(FALSE)
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'boolean',
+        'weight' => 0,
+      ))
+      ->setDisplayOptions('form', array(
+        'settings' => array('display_label' => TRUE),
+        'weight' => 0,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
     // Stereo property of entity.
     $fields['is_stereo'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Is stereo'))
@@ -295,67 +396,24 @@ class VrView extends ContentEntityBase implements VrViewInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    // Owner field of the contact.
-    $fields['hotspots'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Hotspots'))
-      ->setDescription(t('Hotspots of VR View entity.'))
-      ->setSetting('target_type', 'vr_hotspot')
-      ->setSetting('handler', 'default')
-      ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
+    // Is starting property.
+    $fields['is_starting'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Is starting'))
+      ->setDescription(t('Determines whether VR view entity is starting.'))
+      ->setDefaultValue(FALSE)
       ->setDisplayOptions('view', array(
         'label' => 'above',
-        'type' => 'entity_reference_label',
-        'weight' => -3,
+        'type' => 'boolean',
+        'weight' => 0,
       ))
       ->setDisplayOptions('form', array(
-        'type' => 'entity_reference_autocomplete',
-        'settings' => array(
-          'match_operator' => 'CONTAINS',
-          'size' => 60,
-          'autocomplete_type' => 'tags',
-          'placeholder' => '',
-        ),
-        'weight' => -3,
+        'settings' => array('display_label' => TRUE),
+        'weight' => 0,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    // Owner field of the contact.
-    $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Author'))
-      ->setDescription(t('The Name of the associated user.'))
-      ->setSetting('target_type', 'user')
-      ->setSetting('handler', 'default')
-      ->setDisplayOptions('view', array(
-        'label' => 'above',
-        'type' => 'entity_reference_label',
-        'weight' => -3,
-      ))
-      ->setDisplayOptions('form', array(
-        'type' => 'entity_reference_autocomplete',
-        'settings' => array(
-          'match_operator' => 'CONTAINS',
-          'size' => 60,
-          'autocomplete_type' => 'tags',
-          'placeholder' => '',
-        ),
-        'weight' => -3,
-      ))
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', TRUE);
-
-    $fields['langcode'] = BaseFieldDefinition::create('language')
-      ->setLabel(t('Language code'))
-      ->setDescription(t('The language code of VR view entity.'));
-
-    $fields['created'] = BaseFieldDefinition::create('created')
-      ->setLabel(t('Created'))
-      ->setDescription(t('The time that the VR view entity was created.'));
-
-    $fields['changed'] = BaseFieldDefinition::create('changed')
-      ->setLabel(t('Changed'))
-      ->setDescription(t('The time that the VR view entity was last edited.'));
-
+    // Taxonomy type
     $fields['type'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Type'))
       ->setSetting('target_type', 'taxonomy_term')
@@ -371,7 +429,7 @@ class VrView extends ContentEntityBase implements VrViewInterface {
       ))
       ->setDisplayOptions('form', array(
         'type' => 'options_select',//'entity_reference_autocomplete',
-        'weight' => 3,
+        'weight' => 0,
         'settings' => array(
           'match_operator' => 'CONTAINS',
           'size' => '10',
@@ -381,6 +439,67 @@ class VrView extends ContentEntityBase implements VrViewInterface {
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
+
+    // Hotspots.
+    $fields['hotspots'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Hotspots'))
+      ->setDescription(t('Hotspots of VR View entity.'))
+      ->setSetting('target_type', 'vr_hotspot')
+      ->setSetting('handler', 'default')
+      ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'entity_reference_label',
+        'weight' => 0,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'entity_reference_autocomplete',
+        'settings' => array(
+          'match_operator' => 'CONTAINS',
+          'size' => 60,
+          'autocomplete_type' => 'tags',
+          'placeholder' => '',
+        ),
+        'weight' => 0,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    // Owner field of the contact.
+    $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Author'))
+      ->setDescription(t('The Name of the associated user.'))
+      ->setSetting('target_type', 'user')
+      ->setSetting('handler', 'default')
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'entity_reference_label',
+        'weight' => 0,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'entity_reference_autocomplete',
+        'settings' => array(
+          'match_operator' => 'CONTAINS',
+          'size' => 60,
+          'autocomplete_type' => 'tags',
+          'placeholder' => '',
+        ),
+        'weight' => 0,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['langcode'] = BaseFieldDefinition::create('language')
+      ->setLabel(t('Language code'))
+      ->setDescription(t('The language code of VR view entity.'));
+
+    $fields['created'] = BaseFieldDefinition::create('created')
+      ->setLabel(t('Created'))
+      ->setDescription(t('The time that the VR view entity was created.'));
+
+    $fields['changed'] = BaseFieldDefinition::create('changed')
+      ->setLabel(t('Changed'))
+      ->setDescription(t('The time that the VR view entity was last edited.'));
 
     return $fields;
   }

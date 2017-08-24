@@ -11,6 +11,11 @@ vr_view.view:
   base_route: entity.vr_view.canonical
   title: View
 
+vr_view.edit_interactive:
+  route_name: entity.vr_view.canonical
+  base_route: entity.vr_view.canonical
+  title: Interactive edit
+
 vr_view.page_edit:
   route_name: entity.vr_view.edit_form
   base_route: entity.vr_view.canonical

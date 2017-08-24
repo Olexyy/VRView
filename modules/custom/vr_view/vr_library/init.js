@@ -18,6 +18,7 @@ var startImage;
 var views;
 var linkAddExisting;
 var linkAddNew;
+var currentVrViewId;
 
 function setSourceParams() {
     startImage = drupalSettings.vr_view.start_image;
@@ -25,6 +26,7 @@ function setSourceParams() {
     views = drupalSettings.vr_view.views;
     linkAddExisting = drupalSettings.vr_view.link_add_existing;
     linkAddNew = drupalSettings.vr_view.link_add_new;
+    currentVrViewId = views[startView]['id'];
 }
 
 function onLoad() {
@@ -42,11 +44,16 @@ function onLoad() {
     vrView.on('error', onVRViewError);
     vrView.on('click', onVRViewClick);
     vrView.on('getposition', onVRViewPosition);
+    vrView.on('hover', onVRViewHover);
 }
 
 function onVRViewReady(e) {
     console.log('onVRViewReady');
     loadScene(startView);
+}
+
+function onVRViewHover(e) {
+    console.log('onVRViewClick', e);
 }
 
 function onVRViewClick(e) {
@@ -61,10 +68,18 @@ function onVRViewClick(e) {
 
 function loadScene(id) {
     console.log('loadScene', id);
+    currentVrViewId = views[id]['id'];
+    var newEnding = '/'+currentVrViewId+'/0/0';
+    document.getElementById('dynamic-button-add-existing').setAttribute('href', linkAddExisting + newEnding);
+    document.getElementById('dynamic-button-add-new').setAttribute('href', linkAddNew + newEnding);
+    document.getElementById('vrview-title').innerHTML = views[id]['name'];
+    document.getElementById('vrview-description').innerHTML = views[id]['description'];
     vrView.setContent({
         image: views[id]['source'],
         preview: views[id]['source'],
         is_stereo: views[id]['is_stereo'],
+        default_yaw: views[id]['default_yaw'],
+        is_yaw_only: views[id]['is_yaw_only'],
         is_autopan_off: true
     });
     // Add all the hotspots for the scene
@@ -90,7 +105,7 @@ function onVRViewPosition(e) {
     document.getElementById('yaw-value').innerHTML = yaw.toString();
     document.getElementsByName('pitch-value-submit')[0].value = pitch;
     document.getElementsByName('yaw-value-submit')[0].value = yaw;
-    var newEnding = '/'+yaw.toString()+'/'+pitch.toString();
+    var newEnding = '/'+currentVrViewId+'/'+yaw.toString()+'/'+pitch.toString();
     document.getElementById('dynamic-button-add-existing').setAttribute('href', linkAddExisting + newEnding);
     document.getElementById('dynamic-button-add-new').setAttribute('href', linkAddNew + newEnding);
 }

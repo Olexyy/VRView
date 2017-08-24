@@ -75,9 +75,15 @@ class VRViewImageFormatter extends FormatterBase {
       $entity = $item->getEntity();
       $js_settings = $this->jsSettings($entity);
       $element[$delta]['vr_view_widget'] = array(
+        'vr_view_title' => array(
+          '#markup' => '<h2 class="vrview-title" id="vrview-title"></h2>',
+        ),
         'vr_view_image' => array(
           '#markup' => '<div id="vrview"></div>',
           ),
+        'vr_view_description' => array(
+          '#markup' => '<p class="vrview-description" id="vrview-description"></p>',
+        ),
         'vr_view_image_position' => array(
           '#markup' => '<div class="vrview-position position">
                         <div class="position-title">Yaw: <span class="position-yaw value" id="yaw-value">0</span></div>                        
@@ -93,10 +99,12 @@ class VRViewImageFormatter extends FormatterBase {
         'yaw-value-submit' => array(
           '#type' => 'hidden',
           '#default_value' => 0,
+          '#name' => 'yaw-value-submit',
         ),
         'pitch-value-submit' => array(
           '#type' => 'hidden',
           '#default_value' => 0,
+          '#name' => 'pitch-value-submit',
         ),
         '#attached' => array(
           'library' => array( 'vr_view/vr_library', 'core/drupal.dialog.ajax' ),
@@ -117,21 +125,15 @@ class VRViewImageFormatter extends FormatterBase {
    */
   private function jsSettings(EntityInterface $entity) {
     $start_image_uri = file_create_url('public://pics/blank.png');
-    $vr_view_name = $entity->name->value.'_'.$entity->id->value;
+    $vr_view_name = $entity->name->value.'_'.$entity->id();
     $js_settings = [
       'start_image' => $start_image_uri,
       'start_view' => $vr_view_name,
       'views' => [],
-      'link_add_new' => Url::fromUri("internal:/vr_view/add/{$entity->id->value}")->toString(),
-      'link_add_existing' => Url::fromUri("internal:/vr_hotspot/add/{$entity->id->value}")->toString(),
+      'link_add_new' => Url::fromUri("internal:/vr_view/add")->toString(),
+      'link_add_existing' => Url::fromUri("internal:/vr_hotspot/add")->toString(),
     ];
     $this->vrViewToJsSettings($entity, $js_settings);
-    $hotspots = $entity->hotspots->referencedEntities();
-    foreach ($hotspots as $hotspot) {
-      if($vr_view = $hotspot->vr_view_target->entity) {
-        $this->vrViewToJsSettings($vr_view, $js_settings);
-      }
-    }
     return $js_settings;
   }
 
@@ -144,7 +146,21 @@ class VRViewImageFormatter extends FormatterBase {
       'source' => $image_uri,
       'is_stereo' => $is_stereo,
       'hotspots' => $this->hotspotsToJsSettings($entity),
+      'default_yaw' => $this->commaToDot($entity->default_yaw->value),
+      'is_yaw_only' => $entity->is_yaw_only->value,
+      'id' => $entity->id(),
+      'name' => $entity->name->value,
+      'description' => $entity->description->value,
     ];
+    $hotspots = $entity->hotspots->referencedEntities();
+    foreach ($hotspots as $hotspot) {
+      if($vr_view = $hotspot->vr_view_target->entity) {
+        $vr_view_nnn = $vr_view->name->value.'_'.$vr_view->id->value;
+        if(!isset($js_settings['views'][$vr_view_nnn])) {
+          $this->vrViewToJsSettings($vr_view, $js_settings);
+        }
+      }
+    }
   }
 
   private function hotspotsToJsSettings(EntityInterface $entity) {
@@ -152,16 +168,12 @@ class VRViewImageFormatter extends FormatterBase {
     $hotspots = $entity->hotspots->referencedEntities();
     foreach ($hotspots as $hotspot) {
       if($vr_view = $hotspot->vr_view_target->entity) {
-        $vr_view_name = $vr_view->name->value.'_'.$vr_view->id->value.'_'.$hotspot->name->value.'_'.$hotspot->id->value;
-        $yaw = $hotspot->yaw->value;
-        $pitch = $hotspot->pitch->value;
-        $radius = $hotspot->radius->value;
-        $distance = $hotspot->distance->value;
+        $vr_view_name = $vr_view->name->value.'_'.$vr_view->id->value;
         $hotspot_settings[$vr_view_name] = [
-          'pitch' => $pitch,
-          'yaw' => $yaw,
-          'radius' => $radius,
-          'distance' => $distance,
+          'pitch' => $this->commaToDot($hotspot->pitch->value),
+          'yaw' => $this->commaToDot($hotspot->yaw->value),
+          'radius' => $this->commaToDot($hotspot->radius->value),
+          'distance' => $this->commaToDot($hotspot->distance->value),
         ];
       }
     }
@@ -181,5 +193,9 @@ class VRViewImageFormatter extends FormatterBase {
       }
     }
     return $html;
+  }
+
+  private function commaToDot($string) {
+    return str_replace(',', '.', (string)$string);
   }
 }

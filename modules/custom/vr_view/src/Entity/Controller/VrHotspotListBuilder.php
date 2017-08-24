@@ -57,7 +57,7 @@ class VrHotspotListBuilder extends EntityListBuilder {
   public function buildRow(EntityInterface $entity) {
     /* @var $entity \Drupal\vr_view\Entity\VrView */
     $row['id'] = $entity->id();
-    $row['name'] = $entity->name->value;
+    $row['name'] = $entity->toLink();
     $row['distance'] = $entity->distance->value;
     $row['yaw'] = $entity->yaw->value;
     $row['pitch'] = $entity->pitch->value;
