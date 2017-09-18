@@ -1,17 +1,4 @@
-/*
- * Copyright 2016 Google Inc. All Rights Reserved.
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 var vrView;
 var startView;
 var startImage;
@@ -37,6 +24,7 @@ function onLoad() {
     image: startImage,
     preview: startImage,
     is_stereo: false,
+    is_yaw_only: true,
     is_autopan_off: true
     });
     vrView.on('ready', onVRViewReady);
@@ -79,7 +67,7 @@ function loadScene(id) {
         preview: views[id]['source'],
         is_stereo: views[id]['is_stereo'],
         default_yaw: views[id]['default_yaw'],
-        is_yaw_only: views[id]['is_yaw_only'],
+        is_yaw_only: true,
         is_autopan_off: true
     });
     // Add all the hotspots for the scene
@@ -117,9 +105,9 @@ function onModeChange(e) {
 function onVRViewError(e) {
     console.log('Error! %s', e.message);
 }
+
 jQuery(document).ready(
     function ($) {
         onLoad();
     }
 );
-//window.addEventListener('load', onLoad);

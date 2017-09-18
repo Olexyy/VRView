@@ -4,5 +4,5 @@ vr_library:
         layout:
             vr_library/vr_style.css: {}
     js:
-        vr_library/build/vrview.js:  {preprocess: false}
+        vr_library/build/vrview.min.js:  {preprocess: false}
         vr_library/init.js:  {preprocess: false}
