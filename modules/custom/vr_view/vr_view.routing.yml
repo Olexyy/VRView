@@ -45,7 +45,14 @@ entity.vr_view.tie_back:
       _form: 'Drupal\vr_view\Form\VrViewTieBackForm'
     requirements:
       _entity_create_access: 'vr_view'
-
+# NON conventional form for tie back just added vr view
+entity.vr_view.default_yaw:
+    path: '/vr_view/default_yaw/{vr_view_id}/{yaw}'
+    defaults:
+      _title: 'Default yaw for VR View'
+      _controller: '\Drupal\vr_view\Entity\Controller\VrViewController::defaultYaw'
+    requirements:
+      _entity_create_access: 'vr_view'
 entity.vr_view.edit_form:
   path: '/vr_view/{vr_view}/edit'
   defaults:
