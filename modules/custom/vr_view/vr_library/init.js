@@ -69,17 +69,23 @@ function loadScene(id) {
     console.log('loadScene', id);
     currentVrViewId = views[id]['id'];
     defaultYawReal = views[id]['default_yaw'];
-    if(mode !== modes.typeAdmin)
+    if(mode === modes.typeUser)
         defaultYaw = defaultYawReal;
     else
         defaultYaw = 0;
     var newEnding = '/'+currentVrViewId+'/'+defaultYaw+'/0';
-    document.getElementById('dynamic-button-add-existing').setAttribute('href', linkAddExisting + newEnding);
-    document.getElementById('dynamic-button-add-new').setAttribute('href', linkAddNew + newEnding);
-    document.getElementById('dynamic-button-default-yaw').setAttribute('href', linkDefaultYaw + '/'+currentVrViewId + '/' + defaultYaw);
-    document.getElementById('default-yaw-value').innerHTML = defaultYawReal.toString();
-    document.getElementById('vrview-title').innerHTML = views[id]['name'];
-    document.getElementById('vrview-description').innerHTML = views[id]['description'];
+    if(document.getElementById('dynamic-button-add-existing'))
+        document.getElementById('dynamic-button-add-existing').setAttribute('href', linkAddExisting + newEnding);
+    if(document.getElementById('dynamic-button-add-new'))
+        document.getElementById('dynamic-button-add-new').setAttribute('href', linkAddNew + newEnding);
+    if(document.getElementById('dynamic-button-default-yaw'))
+        document.getElementById('dynamic-button-default-yaw').setAttribute('href', linkDefaultYaw + '/'+currentVrViewId + '/' + defaultYaw);
+    if(document.getElementById('default-yaw-value'))
+        document.getElementById('default-yaw-value').innerHTML = defaultYawReal.toString();
+    if(document.getElementById('vrview-title'))
+        document.getElementById('vrview-title').innerHTML = views[id]['name'];
+    if(document.getElementById('vrview-description'))
+        document.getElementById('vrview-description').innerHTML = views[id]['description'];
     // TODO separate func for elem and set default pitch  and yaw...
     vrView.setContent({
         image: views[id]['source'],
@@ -108,14 +114,21 @@ function onVRViewPosition(e) {
 	var pitch = e.Pitch;
 	var yaw = e.Yaw;
 	console.log('pitch: ' + pitch + ', yaw: '+ yaw);
-	document.getElementById('pitch-value').innerHTML = pitch.toString();
-    document.getElementById('yaw-value').innerHTML = yaw.toString();
-    document.getElementsByName('pitch-value-submit')[0].value = pitch;
-    document.getElementsByName('yaw-value-submit')[0].value = yaw;
+	if(document.getElementById('pitch-value'))
+	    document.getElementById('pitch-value').innerHTML = pitch.toString();
+    if(document.getElementById('yaw-value'))
+	    document.getElementById('yaw-value').innerHTML = yaw.toString();
+    if(document.getElementsByName('pitch-value-submit').length)
+        document.getElementsByName('pitch-value-submit')[0].value = pitch;
+    if(document.getElementsByName('yaw-value-submit').length)
+        document.getElementsByName('yaw-value-submit')[0].value = yaw;
     var newEnding = '/'+currentVrViewId+'/'+yaw.toString()+'/'+pitch.toString();
-    document.getElementById('dynamic-button-add-existing').setAttribute('href', linkAddExisting + newEnding);
-    document.getElementById('dynamic-button-add-new').setAttribute('href', linkAddNew + newEnding);
-    document.getElementById('dynamic-button-default-yaw').setAttribute('href', linkDefaultYaw + '/'+currentVrViewId+'/'+yaw.toString());
+    if(document.getElementById('dynamic-button-add-existing'))
+        document.getElementById('dynamic-button-add-existing').setAttribute('href', linkAddExisting + newEnding);
+    if(document.getElementById('dynamic-button-add-new'))
+        document.getElementById('dynamic-button-add-new').setAttribute('href', linkAddNew + newEnding);
+    if(document.getElementById('dynamic-button-default-yaw'))
+        document.getElementById('dynamic-button-default-yaw').setAttribute('href', linkDefaultYaw + '/'+currentVrViewId+'/'+yaw.toString());
 }
 
 function onModeChange(e) {
@@ -127,7 +140,7 @@ function onVRViewError(e) {
 }
 
 jQuery(document).ready(
-    function ($) {
+    function () {
         onLoad();
     }
 );

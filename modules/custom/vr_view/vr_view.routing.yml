@@ -39,13 +39,14 @@ entity.vr_view.add_form_params:
     _entity_create_access: 'vr_view'
 # NON conventional form for tie back just added vr view
 entity.vr_view.tie_back:
-    path: '/vr_view/tie_back/{vr_view_id_parent}/{vr_view_id_child}'
+    path: '/vr_view/{vr_view}/tie_back/{vr_view_id}'
     defaults:
       _title: 'Tie back VR View'
-      _form: 'Drupal\vr_view\Form\VrViewTieBackForm'
+      #_form: 'Drupal\vr_view\Form\VrViewTieBackForm'
+      _entity_form: vr_view.tie_back
     requirements:
       _entity_create_access: 'vr_view'
-# NON conventional form for tie back just added vr view
+# NON conventional route to controller
 entity.vr_view.default_yaw:
     path: '/vr_view/default_yaw/{vr_view_id}/{yaw}'
     defaults:
@@ -59,6 +60,15 @@ entity.vr_view.edit_form:
   # Calls the form.edit controller, defined in the vr_view entity.
     _entity_form: vr_view.edit
     _title: 'Edit VR View'
+  requirements:
+    _entity_access: 'vr_view.edit'
+
+entity.vr_view.interactive:
+  path: '/vr_view/{vr_view}/interactive'
+  defaults:
+  # Calls the view controller, defined in the annotation of the contact entity
+    _title: 'Edit VR View'
+    _entity_form: vr_view.interactive
   requirements:
     _entity_access: 'vr_view.edit'
 

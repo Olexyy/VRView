@@ -83,6 +83,9 @@ use Drupal\user\UserInterface;
  *     "form" = {
  *       "add" = "Drupal\vr_view\Form\VrViewForm",
  *       "edit" = "Drupal\vr_view\Form\VrViewForm",
+ *       "add_to_existing" = "Drupal\vr_view\Form\VrViewForm",
+ *       "interactive" = "Drupal\vr_view\Form\VrViewForm",
+ *       "tie_back" = "Drupal\vr_view\Form\VrViewForm",
  *       "delete" = "Drupal\vr_view\Form\VrViewDeleteForm",
  *     },
  *     "access" = "Drupal\vr_view\VrViewAccessControlHandler",
@@ -304,7 +307,7 @@ class VrView extends ContentEntityBase implements VrViewInterface {
         'type' => 'vr_view_image',
         'weight' => 0,
         'settings' => array(
-          'type' => 'admin',
+          'type' => 'user',
         ),
       ))
       ->setDisplayOptions('form', array(
@@ -503,4 +506,18 @@ class VrView extends ContentEntityBase implements VrViewInterface {
 
     return $fields;
   }
+
+  const displayTypeAdmin = 'admin';
+  const displayTypeSelector = 'selector';
+  const displayTypeUser = 'user';
+
+  public static function getDisplayDefinition($type){
+    return [
+      'type' => 'vr_view_image',
+      'settings' => [
+        'type' => $type,
+      ]
+    ];
+  }
+
 }

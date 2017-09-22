@@ -1,25 +1,22 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Админ
- * Date: 18.09.2017
- * Time: 20:25
- */
 
 namespace Drupal\vr_view\Entity\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\EntityTypeManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class VrViewController extends ControllerBase {
 
+  protected $vrViewStorage;
+
   /**
    * ModalFormHotSpotController constructor.
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
-   * @param \Drupal\Core\Entity\EntityFormBuilder $entity_form_builder
    */
-  public function __construct() {
+  public function __construct(EntityTypeManager $entity_type_manager) {
+    $this->vrViewStorage = $entity_type_manager->getStorage('vr_view');
   }
 
   /**
@@ -29,14 +26,20 @@ class VrViewController extends ControllerBase {
    * @return static
    */
   public static function create(ContainerInterface $container) {
-    return new static();
+    return new static($container->get('entity_type.manager'));
   }
 
+  /**
+   * Callback handler.
+   * @param $vr_view_id
+   * @param $yaw
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   */
   public function defaultYaw($vr_view_id, $yaw) {
+    //\Drupal::entityTypeManager()->getStorage('vr_view')
     if(is_numeric($yaw)) {
-      if($vr_view_id &&($vr_view = \Drupal::entityTypeManager()
-          ->getStorage('vr_view')
-          ->load($vr_view_id))) {
+      if($vr_view_id &&($vr_view = $this->vrViewStorage->load($vr_view_id))) {
         $vr_view->default_yaw = (float)$yaw;
         $vr_view->save();
         drupal_set_message($this->t('The VR View %vr_view has been is set to default %yaw yaw.', array(
