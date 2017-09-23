@@ -33,7 +33,7 @@ entity.vr_view.add_form:
 entity.vr_view.add_form_params:
   path: '/vr_view/add/{vr_view_id}/{yaw}/{pitch}'
   defaults:
-    _entity_form: vr_view.add
+    _entity_form: vr_view.add_to_existing
     _title: 'Add VR View to existing'
   requirements:
     _entity_create_access: 'vr_view'

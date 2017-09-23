@@ -26,38 +26,47 @@ class VrViewForm extends ContentEntityForm {
   const operationTieBack = 'tie_back';
 
   /**
+   * @var string const $operationAddToExisting
+   */
+  const operationAddToExisting = 'add_to_existing';
+
+  /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $vr_view_id = NULL, $yaw = NULL, $pitch = NULL) {
     /* @var $entity \Drupal\vr_view\Entity\VrView */
     $form = parent::buildForm($form, $form_state);
-    $entity = $this->entity;
+    $entity = $this->getEntity();
     if($this->operation == self::operationInteractive) {
       $this->hideElements($form);
       $form['vr_view_widget']= $entity->image->view(VrView::getDisplayDefinition(VrView::displayTypeAdmin));
       $form['#title'] = t('Interactive edit');
-
       return $form;
     }
     else if($this->operation == self::operationTieBack) {
       $this->initParams($form_state, $vr_view_id, NULL, NULL);
       if($this->hasParentVrView($form_state)) {
         $this->hideElements($form);
-        $form['vr_view_widget'] = $this->getParentVrView($form_state)->image->view(VrView::getDisplayDefinition(VrView::displayTypeSelector));
+        $form['vr_view_widget'] = $entity->image->view(VrView::getDisplayDefinition(VrView::displayTypeSelector));
         $form['#title'] = t('Vr view tie back');
-        $form['actions']['#type'] = 'actions';
-        $form['actions']['submit'] = [
-          '#type' => 'submit',
-          '#value' => $this->t('Tie back'),
-          '#button_type' => 'primary',
-        ];
+        $form['actions']['submit']['#submit'] = [ '::tieBackFormSubmit' ];
+        $form['actions']['submit']['#value'] = $this->t('Tie back');
+        $form['actions']['submit']['#button_type'] = 'primary';
+        $form['actions']['delete']['#access'] = FALSE;
         return $form;
       }
       return [];
     }
-
-    $this->initParams($form_state, $vr_view_id, $yaw, $pitch);
-
+    else if($this->operation == self::operationAddToExisting) {
+      $this->initParams($form_state, $vr_view_id, $yaw, $pitch);
+      $form['summary'] = array (
+        '#type' => 'item',
+        '#weight' => -100,
+        '#description' => $this->t("New view will be added to {$this->getParentVrView($form_state)->name->value}, 
+        at position: yaw - {$this->getYaw($form_state)}, pitch - {$this->getPitch($form_state)}."),
+      );
+      $form['summary'] = $this->entity->image->view(VrView::getDisplayDefinition(VrView::displayTypeAdmin));
+    }
     $form['langcode'] = array(
       '#title' => $this->t('Language'),
       '#type' => 'language_select',
@@ -65,26 +74,13 @@ class VrViewForm extends ContentEntityForm {
       '#languages' => Language::STATE_ALL,
     );
 
-    if($this->paramsExist($form_state)) {
-      $form['summary'] = array (
-        '#type' => 'item',
-        '#weight' => -100,
-        '#description' => $this->t("New view will be added to {$this->getParentVrView($form_state)->name->value}, 
-        at position: yaw - {$this->getYaw($form_state)}, pitch - {$this->getPitch($form_state)}."),
-      );
-      $display = array(
-        'label' => 'above',
-        'type' => 'vr_view_image',
-        'settings' => array(
-          'type' => 'admin',
-        ),
-      );
-      $form['summary'] = $this->entity->image->view($display);
-    }
     return $form;
   }
 
-  private function hideElements(&$form) {
+  /**
+   * @param array $form
+   */
+  private function hideElements(array &$form) {
     foreach($form as $key => $element) {
       if(is_array($element) && isset ($element['#access'])) {
         $form[$key]['#access'] = FALSE;
@@ -93,12 +89,36 @@ class VrViewForm extends ContentEntityForm {
   }
 
   /**
+   * Alternative submit for tie back form.
+   * @param array $forrm
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   */
+  public function tieBackFormSubmit(array $forrm, FormStateInterface $form_state) {
+    $parent_vr_view = $this->getParentVrView($form_state);
+    $child_vr_view = $this->getEntity();
+    $yaw = $form_state->getValue('yaw-value-submit');
+    $pitch = $form_state->getValue('pitch-value-submit');
+    $hotspot = \Drupal::entityTypeManager()->getStorage('vr_hotspot')->create();
+    $hotspot->vr_view_target = $parent_vr_view;
+    $hotspot->pitch = (float)$pitch;
+    $hotspot->yaw = (float)$yaw;
+    $hotspot->distance = 1;
+    $hotspot->radius = 0.05;
+    $hotspot->name = $child_vr_view->name->value .'-'.$parent_vr_view->name->value;
+    $hotspot->save();
+    $child_vr_view->hotspots[] = $hotspot;
+    $child_vr_view->save();
+    drupal_set_message($this->t('The VR View %child has been added to VR View %parent.', [
+      '%child' => $child_vr_view->toLink()->toString(),
+      '%parent' => $parent_vr_view->toLink()->toString()
+    ]));
+    $form_state->setRedirectUrl($parent_vr_view->toUrl());
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    if($this->operation == self::operationTieBack) {
-      return TRUE; // ???
-    }
     $status = parent::save($form, $form_state);
 
     $entity = $this->getEntity();
@@ -110,7 +130,7 @@ class VrViewForm extends ContentEntityForm {
       $form_state->setRedirectUrl($entity->toUrl('collection'));
     }
     else {
-      if($this->paramsExist($form_state)) {
+      if($this->operation == self::operationAddToExisting) {
         $parent_vr_view = $this->getParentVrView($form_state);
         $hotspot = \Drupal::entityTypeManager()->getStorage('vr_hotspot')->create();
         $hotspot->vr_view_target = $entity;
@@ -126,7 +146,7 @@ class VrViewForm extends ContentEntityForm {
           '%feed' => $parent_vr_view->toLink()->toString()
         ]));
         $form_state->setRedirectUrl(Url::fromRoute('entity.vr_view.tie_back', [
-          'vr_view_id_child' => $parent_vr_view->id(), 'vr_view_id_parent' => $entity->id()
+          'vr_view_id' => $parent_vr_view->id(), 'vr_view' => $entity->id()
         ]));
       }
       else {
@@ -216,36 +236,8 @@ class VrViewForm extends ContentEntityForm {
         if(isset($pitch)) {
           $pitch = ($pitch)? $this->commasToDots($pitch) : '0';
           $form_state->set('pitch', $pitch);
-          return;
         }
       }
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    if($this->operation == self::operationTieBack) {
-      $parent_vr_view = $this->getParentVrView($form_state);
-      $child_vr_view = $this->getEntity(); // $this->entity ???
-      $yaw = $form_state->getValue('yaw-value-submit');
-      $pitch = $form_state->getValue('pitch-value-submit');
-      $hotspot = \Drupal::entityTypeManager()->getStorage('vr_hotspot')->create();
-      $hotspot->vr_view_target = $child_vr_view;
-      $hotspot->pitch = $pitch;
-      $hotspot->yaw = $yaw;
-      $hotspot->distance = 1;
-      $hotspot->radius = 0.05;
-      $hotspot->name = $parent_vr_view->name->value .'-'.$child_vr_view->name->value;
-      $hotspot->save();
-      $parent_vr_view->hotspots[] = $hotspot;
-      $parent_vr_view->save();
-      drupal_set_message($this->t('The VR View %child has been added to VR View %parent.', [
-        '%child' => $child_vr_view->toLink()->toString(),
-        '%parent' => $parent_vr_view->toLink()->toString()
-      ]));
-      $form_state->setRedirectUrl($child_vr_view->toUrl());
     }
   }
 

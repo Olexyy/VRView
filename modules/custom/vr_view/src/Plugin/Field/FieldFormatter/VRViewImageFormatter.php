@@ -192,34 +192,6 @@ class VRViewImageFormatter extends FormatterBase {
       'vr_view_description' => array(
         '#markup' => '<p class="vrview-description" id="vrview-description"></p>',
       ),
-      'vr_view_image_position' => array(
-        '#markup' => '<div class="vrview-position position">
-                        <div class="position-title">Yaw: <span class="position-yaw value" id="yaw-value">0</span></div>                        
-                        <div class="position-title">Pitch: <span class="position-pitch value" id="pitch-value">0</span></div>
-                    </div>',
-      ),
-      'vr_view_default_yaw' => array(
-        '#markup' => '<div class="vrview-default-yaw default-yaw">
-                        <div class="default-yaw-title">Default yaw: <span class="default-yaw-value" id="default-yaw-value">0</span></div>
-                    </div>',
-      ),
-      'vr_view_admin_actions' => array (
-        '#markup' => Link::fromTextAndUrl(t('Add new Vr view using current pitch and yaw'), Url::fromUri("internal:/vr_view/add/{$entity->id->value}/0/0", [ 'attributes' => ['id' => 'dynamic-button-add-new', 'class' => ['button-action', 'button', 'dynamic-args'] ]]))->toString()
-          .Link::fromTextAndUrl(t('Add existing Vr view using current pitch and yaw'), Url::fromUri("internal:/vr_hotspot/add/{$entity->id->value}/0/0", [ 'attributes' => ['id' => 'dynamic-button-add-existing', 'class' => ['button-action', 'button', 'dynamic-args'] ]]))->toString()
-          .$this->hotspotsLinks($entity)
-          .'<br />'.t('Add new or edit existing hotspots, using current pitch and yaw.').'<br />'
-          .Link::fromTextAndUrl(t('Make current yaw to be default'), Url::fromUri("internal:/vr_view/default_yaw/{$entity->id->value}/0", [ 'attributes' => ['id' => 'dynamic-button-default-yaw', 'class' => ['button-action', 'button', 'dynamic-args'] ]]))->toString(),
-      ),
-      'yaw-value-submit' => array(
-        '#type' => 'hidden',
-        '#default_value' => 0,
-        '#name' => 'yaw-value-submit',
-      ),
-      'pitch-value-submit' => array(
-        '#type' => 'hidden',
-        '#default_value' => 0,
-        '#name' => 'pitch-value-submit',
-      ),
       '#attached' => array(
         'library' => array( 'vr_view/vr_library', 'core/drupal.dialog.ajax' ),
         'drupalSettings' => array( 'vr_view' => $js_settings ),
@@ -256,8 +228,12 @@ class VRViewImageFormatter extends FormatterBase {
   private function vrViewToJsSettings(EntityInterface $entity, array &$js_settings, $type) {
     $vr_view_name = $entity->name->value.'_'.$entity->id->value;
     $is_stereo = $entity->is_stereo->value;
-    $file = $entity->image->entity;
-    $image_uri = file_create_url($file->getFileUri());
+    if($file = $entity->image->entity) {
+      $image_uri = file_create_url($file->getFileUri());
+    }
+    else {
+      $image_uri = '';
+    }
     $js_settings['views'][$vr_view_name] = [
       'source' => $image_uri,
       'is_stereo' => $is_stereo,
