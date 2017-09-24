@@ -15,6 +15,7 @@ var modes = new Object({
     typeSelector : 'selector',
     typeUser : 'user'
 });
+var linkHotspotPosition;
 
 function setSourceParams() {
     mode = drupalSettings.vr_view.mode;
@@ -25,6 +26,7 @@ function setSourceParams() {
     linkAddNew = drupalSettings.vr_view.link_add_new;
     linkDefaultYaw = drupalSettings.vr_view.link_default_yaw;
     currentVrViewId = views[startView]['id'];
+    linkHotspotPosition = drupalSettings.vr_view.link_hotspot_position
 }
 
 function onLoad() {
@@ -86,6 +88,19 @@ function loadScene(id) {
         document.getElementById('vrview-title').innerHTML = views[id]['name'];
     if(document.getElementById('vrview-description'))
         document.getElementById('vrview-description').innerHTML = views[id]['description'];
+    if(document.getElementById('hotspots-link-placeholder'))
+        document.getElementById('hotspots-link-placeholder').innerHTML = '';
+    var hotspots = views[id]['hotspots'];
+    for (var hotspot in hotspots) {
+        if(hotspots.hasOwnProperty(hotspot)) {
+            var new_link = document.createElement('A');
+            new_link.innerHTML = 'Set current pitch and yaw to: ' + hotspots[hotspot]['name'];
+            new_link.setAttribute('class', 'dynamic-button-hotspot-position button-action button dynamic-args');
+            new_link.setAttribute('hotspot', hotspots[hotspot]['id']);
+            new_link.setAttribute('href', linkHotspotPosition + '/' + hotspots[hotspot]['id'] + newEnding);
+            document.getElementById('hotspots-link-placeholder').appendChild(new_link);
+        }
+    }
     // TODO separate func for elem and set default pitch  and yaw...
     vrView.setContent({
         image: views[id]['source'],
@@ -129,6 +144,11 @@ function onVRViewPosition(e) {
         document.getElementById('dynamic-button-add-new').setAttribute('href', linkAddNew + newEnding);
     if(document.getElementById('dynamic-button-default-yaw'))
         document.getElementById('dynamic-button-default-yaw').setAttribute('href', linkDefaultYaw + '/'+currentVrViewId+'/'+yaw.toString());
+    var hotspotLinks = document.getElementsByClassName('dynamic-button-hotspot-position');
+    for(var i = 0; i < hotspotLinks.length; i++) {
+        var hotspot_id = hotspotLinks[i].getAttribute('hotspot');
+        hotspotLinks[i].setAttribute('href', linkHotspotPosition + '/' + hotspot_id + newEnding);
+    }
 }
 
 function onModeChange(e) {

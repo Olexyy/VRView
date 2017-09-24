@@ -146,3 +146,11 @@ vr_hotspot.vr_hotspot_settings:
     _title: 'VR Hotspot Settings'
   requirements:
     _permission: 'administer vr_hotspot entity'
+
+entity.vr_hotspot.position:
+  path: '/vr_hotspot/position/{vr_hotspot}/{vr_view}/{yaw}/{pitch}'
+  defaults:
+    _controller: '\Drupal\vr_view\Entity\Controller\VrHotspotController::position'
+    _title: 'Change position of VR Hotspot'
+  requirements:
+    _permission: 'edit vr_view entity'
