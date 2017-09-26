@@ -90,15 +90,17 @@ function loadScene(id) {
         document.getElementById('vrview-description').innerHTML = views[id]['description'];
     if(document.getElementById('hotspots-link-placeholder'))
         document.getElementById('hotspots-link-placeholder').innerHTML = '';
-    var hotspots = views[id]['hotspots'];
-    for (var hotspot in hotspots) {
-        if(hotspots.hasOwnProperty(hotspot)) {
-            var new_link = document.createElement('A');
-            new_link.innerHTML = 'Set current pitch and yaw to: ' + hotspots[hotspot]['name'];
-            new_link.setAttribute('class', 'dynamic-button-hotspot-position button-action button dynamic-args');
-            new_link.setAttribute('hotspot', hotspots[hotspot]['id']);
-            new_link.setAttribute('href', linkHotspotPosition + '/' + hotspots[hotspot]['id'] + newEnding);
-            document.getElementById('hotspots-link-placeholder').appendChild(new_link);
+    if(document.getElementById('hotspots-link-placeholder')) {
+        var hotspots = views[id]['hotspots'];
+        for (var hotspot in hotspots) {
+            if (hotspots.hasOwnProperty(hotspot)) {
+                var new_link = document.createElement('A');
+                new_link.innerHTML = 'Set current pitch and yaw to: ' + hotspots[hotspot]['name'];
+                new_link.setAttribute('class', 'dynamic-button-hotspot-position button-action button dynamic-args');
+                new_link.setAttribute('hotspot', hotspots[hotspot]['id']);
+                new_link.setAttribute('href', linkHotspotPosition + '/' + hotspots[hotspot]['id'] + newEnding);
+                document.getElementById('hotspots-link-placeholder').appendChild(new_link);
+            }
         }
     }
     // TODO separate func for elem and set default pitch  and yaw...

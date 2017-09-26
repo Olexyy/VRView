@@ -97,7 +97,7 @@ class VRViewImageFormatter extends FormatterBase {
         '#markup' => '<h2 class="vrview-title" id="vrview-title"></h2>',
       ),
       'vr_view_image' => array(
-        '#markup' => '<div id="vrview"></div>',
+        '#markup' => '<div id="vrview_wrapper"><div id="vrview_y"></div><div id="vrview_x"></div><div id="vrview"></div></div>',
       ),
       'vr_view_description' => array(
         '#markup' => '<p class="vrview-description" id="vrview-description"></p>',

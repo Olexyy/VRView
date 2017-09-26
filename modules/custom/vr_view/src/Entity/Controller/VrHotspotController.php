@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class VrHotspotController extends ControllerBase {
 
   protected $vrHotspotStorage;
+  protected $vrViewStorage;
 
   /**
    * ModalFormHotSpotController constructor.
@@ -17,6 +18,7 @@ class VrHotspotController extends ControllerBase {
    */
   public function __construct(EntityTypeManager $entity_type_manager) {
     $this->vrHotspotStorage = $entity_type_manager->getStorage('vr_hotspot');
+    $this->vrViewStorage = $entity_type_manager->getStorage('vr_view');
   }
 
   /**
@@ -41,16 +43,18 @@ class VrHotspotController extends ControllerBase {
   public function position($vr_hotspot, $vr_view, $yaw, $pitch) {
     //\Drupal::entityTypeManager()->getStorage('vr_view')
     if($yaw && is_numeric($yaw) && $pitch && is_numeric($pitch)) {
-      if($vr_hotspot &&($vr_hotspot = $this->vrHotspotStorage->load($vr_hotspot))) {
-        $vr_hotspot->yaw = (float)$yaw;
-        $vr_hotspot->pitch = (float)$pitch;
-        $vr_hotspot->save();
-        drupal_set_message($this->t('The VR View %vr_hotspot has been set %yaw yaw, %pitch pitch.', [
-          '%vr_hotspot' => $vr_hotspot->toLink()->toString(),
-          '%yaw' => $yaw,
-          '%pitch' => $pitch
-        ]));
-        return $this->redirect('entity.vr_view.canonical', ['vr_view' => $vr_view->id()]);
+      if($vr_view && ($vr_view = $this->vrViewStorage->load($vr_view))) {
+        if ($vr_hotspot && ($vr_hotspot = $this->vrHotspotStorage->load($vr_hotspot))) {
+          $vr_hotspot->yaw = (float) $yaw;
+          $vr_hotspot->pitch = (float) $pitch;
+          $vr_hotspot->save();
+          drupal_set_message($this->t('The VR View %vr_hotspot has been set %yaw yaw, %pitch pitch.', [
+            '%vr_hotspot' => $vr_hotspot->toLink()->toString(),
+            '%yaw' => $yaw,
+            '%pitch' => $pitch
+          ]));
+          return $this->redirect('entity.vr_view.interactive', ['vr_view' => $vr_view->id()]);
+        }
       }
     }
     drupal_set_message($this->t('Something went wrong.'));
