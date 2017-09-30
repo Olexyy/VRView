@@ -30,7 +30,7 @@ entity.vr_view.add_form:
   requirements:
     _entity_create_access: 'vr_view'
 # NON convention create vr_view, add hotspot based on params to existing vr_view
-entity.vr_view.add_form_params:
+entity.vr_view.add_to_existing:
   path: '/vr_view/add/{vr_view_id}/{yaw}/{pitch}'
   defaults:
     _entity_form: vr_view.add_to_existing
@@ -154,3 +154,11 @@ entity.vr_hotspot.position:
     _title: 'Change position of VR Hotspot'
   requirements:
     _permission: 'edit vr_view entity'
+# NON conventional\
+entity.vr_hotspot.add_existing:
+  path: '/vr_hotspot/add/{vr_view}/{yaw}/{pitch}'
+  defaults:
+    _entity_form: vr_hotspot.add_existing
+    _title: 'Add VR View to existing'
+  requirements:
+    _entity_create_access: 'vr_hotspot'

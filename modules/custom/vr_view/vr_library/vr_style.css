@@ -94,7 +94,7 @@ iframe {
 }
 
 #vrview_x {
-  background-color: red;
+  border: solid 1px lightgrey;
   width:5px;
   height: 5px;
   border-radius: 5px;
@@ -103,17 +103,20 @@ iframe {
   z-index: 1000;
   margin: auto;
 }
-/*
-#vrview:after {
+.hotspot-details {
+  border: solid 1px darkgrey;
+  max-width:100px;
+  max-height: 100px;
+  border-radius: 3px;
+  position: absolute;
+  overflow: hidden;
+  color: grey;
+  background-color: white;
+  opacity: 0.6;
+  padding: 3px 10px;
+}
+#vrview {
+  max-width: 700px;
+  margin: 0 auto;
   position: relative;
-  z-index: 1000;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  content: "\274c";
-  font-size: 50px;
-  color: #FFF;
-  line-height: 100px;
-  text-align: center;
-}*/
+}

@@ -45,7 +45,8 @@ function onLoad() {
     vrView.on('error', onVRViewError);
     vrView.on('click', onVRViewClick);
     vrView.on('getposition', onVRViewPosition);
-    vrView.on('hover', onVRViewHover);
+    vrView.on('focus', onVRViewFocus);
+    vrView.on('blur', onVRViewBlur);
 }
 
 function onVRViewReady(e) {
@@ -53,8 +54,22 @@ function onVRViewReady(e) {
     loadScene(startView);
 }
 
-function onVRViewHover(e) {
-    console.log('onVRViewClick', e);
+function onVRViewBlur(e) {
+    console.log('onVRViewBlur', e);
+    var wrapper = document.getElementById('vrview');
+    var child = document.getElementsByClassName('hotspot-details')[0];
+    wrapper.removeChild(child);
+}
+
+function onVRViewFocus(e) {
+    console.log('onVRViewFocus', e);
+    var div = document.createElement('DIV');
+    div.innerHTML = views[e.data.id]['name'];
+    div.classList.add('hotspot-details');
+    div.style.top = (e.data.y)+'px';
+    div.style.left = (e.data.x)+'px';
+    var wrapper = document.getElementById('vrview');
+    wrapper.appendChild(div);
 }
 
 function onVRViewClick(e) {

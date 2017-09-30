@@ -100,6 +100,7 @@ use Drupal\user\UserInterface;
  *   },
  *   links = {
  *     "canonical" = "/vr_view/{vr_view}",
+ *     "interactive" = "/vr_view/{vr_view}/interactive",
  *     "edit-form" = "/vr_view/{vr_view}/edit",
  *     "delete-form" = "/vr_view/{vr_view}/delete",
  *     "collection" = "/vr_view/list"

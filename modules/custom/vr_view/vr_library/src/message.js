@@ -27,6 +27,8 @@ var Message = {
   SET_CURRENT_TIME: 'setcurrenttime',
   DEVICE_MOTION: 'devicemotion',
   GET_POSITION: 'getposition',
+  FOCUS: 'focus',
+  BLUR: 'blur',
   SET_FULLSCREEN: 'setfullscreen',
 };
 

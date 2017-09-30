@@ -80,6 +80,7 @@ function HotspotRenderer(worldRenderer) {
   // For raycasting. Initialize mouse to be off screen initially.
   this.pointer = new THREE.Vector2(1, 1);
   this.raycaster = new THREE.Raycaster();
+  this.mouse = { x: null, y:null };
 }
 HotspotRenderer.prototype = new EventEmitter();
 
@@ -152,7 +153,7 @@ HotspotRenderer.prototype.getCount = function() {
   return count;
 };
 
-HotspotRenderer.prototype.update = function(camera) {
+HotspotRenderer.prototype.update = function(camera, e) {
   if (this.worldRenderer.isVRMode()) {
     this.pointer.set(0, 0);
   }
@@ -176,12 +177,12 @@ HotspotRenderer.prototype.update = function(camera) {
 
     // If newly selected, emit a focus event.
     if (isIntersected && !this.selectedHotspots[id]) {
-      this.emit('focus', id);
+      this.emit('focus', {id: id, x: this.mouse.x, y: this.mouse.y });
       this.focus_(id);
     }
     // If no longer selected, emit a blur event.
     if (!isIntersected && this.selectedHotspots[id]) {
-      this.emit('blur', id);
+      this.emit('blur', {id: id, x: this.mouse.x, y: this.mouse.y });
       this.blur_(id);
     }
     // Update the set of selected hotspots.
@@ -207,7 +208,7 @@ HotspotRenderer.prototype.onTouchStart_ = function(e) {
   }
 
   // Force a camera update to see if any hotspots were selected.
-  this.update(this.worldRenderer.camera);
+  this.update(this.worldRenderer.camera, e);
 
   this.downHotspots = {};
   for (var id in this.selectedHotspots) {
@@ -237,6 +238,8 @@ HotspotRenderer.prototype.updateTouch_ = function(e) {
   var touch = e.touches[0];
 	this.pointer.x = (touch.clientX / size.width) * 2 - 1;
 	this.pointer.y = - (touch.clientY / size.height) * 2 + 1;
+  this.mouse.x = e.clientX;
+  this.mouse.y = e.clientY;
 };
 
 HotspotRenderer.prototype.onMouseDown_ = function(e) {
@@ -275,6 +278,8 @@ HotspotRenderer.prototype.updateMouse_ = function(e) {
   var size = this.getSize_();
 	this.pointer.x = (e.clientX / size.width) * 2 - 1;
 	this.pointer.y = - (e.clientY / size.height) * 2 + 1;
+    this.mouse.x = e.clientX;
+    this.mouse.y = e.clientY;
 };
 
 HotspotRenderer.prototype.getSize_ = function() {

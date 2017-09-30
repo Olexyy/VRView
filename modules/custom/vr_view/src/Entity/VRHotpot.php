@@ -82,6 +82,7 @@ use Drupal\user\UserInterface;
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "form" = {
  *       "add" = "Drupal\vr_view\Form\VrHotspotForm",
+ *       "add_existing" = "Drupal\vr_view\Form\VrHotspotForm",
  *       "edit" = "Drupal\vr_view\Form\VrHotspotForm",
  *       "delete" = "Drupal\vr_view\Form\VrHotspotDeleteForm",
  *     },
@@ -243,11 +244,9 @@ class VRHotpot extends ContentEntityBase implements VrHotspotInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'string',
-        'weight' => 0,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'string_textfield',
-        'weight' => 0,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -264,11 +263,9 @@ class VRHotpot extends ContentEntityBase implements VrHotspotInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'float',
-        'weight' => 0,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'number',
-        'weight' => 0,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -285,11 +282,9 @@ class VRHotpot extends ContentEntityBase implements VrHotspotInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'float',
-        'weight' => 0,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'number',
-        'weight' => 0,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -306,11 +301,9 @@ class VRHotpot extends ContentEntityBase implements VrHotspotInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'float',
-        'weight' => 0,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'number',
-        'weight' => 0,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -327,11 +320,9 @@ class VRHotpot extends ContentEntityBase implements VrHotspotInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'float',
-        'weight' => 0,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'number',
-        'weight' => 0,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -346,7 +337,6 @@ class VRHotpot extends ContentEntityBase implements VrHotspotInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'entity_reference_label',
-        'weight' => 0,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'entity_reference_autocomplete',
@@ -356,7 +346,6 @@ class VRHotpot extends ContentEntityBase implements VrHotspotInterface {
           'autocomplete_type' => 'tags',
           'placeholder' => '',
         ),
-        'weight' => 0,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);

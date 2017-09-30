@@ -89,6 +89,25 @@ class VrViewForm extends ContentEntityForm {
   }
 
   /**
+   * @inheritdoc
+   * @param array $form
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *
+   * @return \Drupal\Core\Entity\ContentEntityInterface|\Drupal\Core\Entity\ContentEntityTypeInterface|void
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $name = $form_state->getValue('name')[0]['value'];
+    $exists = \Drupal::entityQuery('vr_view')
+      ->condition('name', $name, '=')
+      ->count()
+      ->execute();
+    if($exists) {
+      $form_state->setErrorByName('name', $this->t('Value should be unique'));
+    }
+    parent::validateForm($form, $form_state);
+  }
+
+  /**
    * Alternative submit for tie back form.
    * @param array $forrm
    * @param \Drupal\Core\Form\FormStateInterface $form_state
@@ -112,7 +131,7 @@ class VrViewForm extends ContentEntityForm {
       '%child' => $child_vr_view->toLink()->toString(),
       '%parent' => $parent_vr_view->toLink()->toString()
     ]));
-    $form_state->setRedirectUrl($parent_vr_view->toUrl());
+    $form_state->setRedirectUrl($parent_vr_view->toUrl('interactive'));
   }
 
   /**
