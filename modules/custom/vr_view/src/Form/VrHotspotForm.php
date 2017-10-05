@@ -28,7 +28,7 @@ class VrHotspotForm extends ContentEntityForm {
   public function buildForm(array $form, FormStateInterface $form_state, $vr_view = NULL, $yaw = NULL, $pitch = NULL) {
     /* @var $entity \Drupal\vr_view\Entity\VRHotpot */
     $form = parent::buildForm($form, $form_state);
-    $entity = $this->entity;
+    $entity = $this->getEntity();
 
     if($this->operation == self::operationAddExisting) {
       $this->initParams($form_state, $vr_view, $yaw, $pitch);
@@ -44,13 +44,14 @@ class VrHotspotForm extends ContentEntityForm {
       if(!$form_state->getValue('vr_view_options', FALSE)) {
         $parent_vr_view = $this->getParentVrView($form_state);
         $type = $parent_vr_view->type->entity;
-        $type_id = FALSE;
+        $type_id = NULL;
         if ($type) {
           $type_id = $type->id();
         }
         else if ($taxonomy_options) {
           $type_id = current(array_keys($taxonomy_options));
         }
+        $form_state->setValue('vr_view_taxonomy_default', $type_id);
         $query = \Drupal::entityQuery('vr_view');
         if ($type_id) {
           $query->condition('type', $type_id, '=');
@@ -87,8 +88,8 @@ class VrHotspotForm extends ContentEntityForm {
           '#title' => $this->t('Types'),
           '#description' => $this->t('Select from available types'),
           '#type' => 'select',
+          '#default_value' => $form_state->getValue('vr_view_taxonomy_default', NULL),
           '#options' => $taxonomy_options,
-          '#empty_option' => '-Select-',
           '#ajax' => [
             'callback' => [ $this, 'vrViewList' ],
             'event' => 'change',
@@ -124,17 +125,8 @@ class VrHotspotForm extends ContentEntityForm {
           ->load($vr_view_id);
         $options[$vr_view_id] = $vr_view_entity->name->value;
       }
-      $element = [
-        '#type' => 'select',
-        '#title' => $this->t('Existing vr view'),
-        '#description' => $this->t('Select VR view form same taxonomy type'),
-        '#options' => $options,
-        '#required' => TRUE,
-        '#empty_option' => '-Select-',
-        '#prefix' => "<div id='dynamic-form-element'>",
-        '#suffix' => "</div>",
-      ];
-      $response->addCommand(new ReplaceCommand('#dynamic-form-element', render($element)));
+      $form['vr_view_target']['widget'][0]['target_id']['#options'] = $options;
+      $response->addCommand(new ReplaceCommand('#dynamic-form-element', $form['vr_view_target']));
     }
     return $response;
   }

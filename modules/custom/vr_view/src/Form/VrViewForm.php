@@ -96,13 +96,16 @@ class VrViewForm extends ContentEntityForm {
    * @return \Drupal\Core\Entity\ContentEntityInterface|\Drupal\Core\Entity\ContentEntityTypeInterface|void
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $name = $form_state->getValue('name')[0]['value'];
-    $exists = \Drupal::entityQuery('vr_view')
-      ->condition('name', $name, '=')
-      ->count()
-      ->execute();
-    if($exists) {
-      $form_state->setErrorByName('name', $this->t('Value should be unique'));
+    $entity = $this->getEntity();
+    if($entity->isNew()) {
+      $name = $form_state->getValue('name')[0]['value'];
+      $exists = \Drupal::entityQuery('vr_view')
+        ->condition('name', $name, '=')
+        ->count()
+        ->execute();
+      if($exists) {
+        $form_state->setErrorByName('name', $this->t('Value should be unique'));
+      }
     }
     parent::validateForm($form, $form_state);
   }
