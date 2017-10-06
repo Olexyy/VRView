@@ -114,11 +114,13 @@ class VRViewImageFormatter extends FormatterBase {
                     </div>',
       ),
       'vr_view_admin_actions' => array (
-        '#markup' =>
-          '<span id="admin-actions-links-placeholder">'
+        '#type' => 'fieldset',
+        '#title' => 'admin actions',
+        '#description' =>
+          '<div id="admin-actions-links-placeholder" class="region region-secondary-menu">'
             .Link::fromTextAndUrl(t('Add new Vr view using current pitch and yaw'), Url::fromUri("internal:/vr_view/add/{$entity->id->value}/0/0", [ 'attributes' => ['id' => 'dynamic-button-add-new', 'class' => ['button-action', 'button', 'dynamic-args'] ]]))->toString()
             .Link::fromTextAndUrl(t('Add existing Vr view using current pitch and yaw'), Url::fromUri("internal:/vr_hotspot/add/{$entity->id->value}/0/0", [ 'attributes' => ['id' => 'dynamic-button-add-existing', 'class' => ['button-action', 'button', 'dynamic-args'] ]]))->toString()
-          .'</span>'
+          .'</div>'
           .'<span id="hotspots-link-placeholder">'.$this->hotspotsLinks($entity).'</span>'
           //.t('Add new or edit existing hotspots, using current pitch and yaw.').'<br />'
           .'<span id="default-yaw-link-placeholder">'

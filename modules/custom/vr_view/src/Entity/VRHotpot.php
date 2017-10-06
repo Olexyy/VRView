@@ -244,28 +244,11 @@ class VRHotpot extends ContentEntityBase implements VrHotspotInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'string',
+        'weight' => -10,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'string_textfield',
-      ))
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', TRUE);
-
-    // Distance field for the contact.
-    $fields['distance'] = BaseFieldDefinition::create('float')
-      ->setLabel(t('Distance'))
-      ->setDescription(t('The distance property of the VR Hotspot entity.'))
-      ->setSettings(array(
-        'default_value' => 0,
-        'max_length' => 255,
-        'text_processing' => 0,
-      ))
-      ->setDisplayOptions('view', array(
-        'label' => 'above',
-        'type' => 'float',
-      ))
-      ->setDisplayOptions('form', array(
-        'type' => 'number',
+        'weight' => -10,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -282,9 +265,11 @@ class VRHotpot extends ContentEntityBase implements VrHotspotInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'float',
+        'weight' => -9,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'number',
+        'weight' => -9,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -301,9 +286,11 @@ class VRHotpot extends ContentEntityBase implements VrHotspotInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'float',
+        'weight' => -8,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'number',
+        'weight' => -8,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -320,9 +307,32 @@ class VRHotpot extends ContentEntityBase implements VrHotspotInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'float',
+        'weight' => -7,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'number',
+        'weight' => -7,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    // Distance field for the contact.
+    $fields['distance'] = BaseFieldDefinition::create('float')
+      ->setLabel(t('Distance'))
+      ->setDescription(t('The distance property of the VR Hotspot entity.'))
+      ->setSettings(array(
+        'default_value' => 0,
+        'max_length' => 255,
+        'text_processing' => 0,
+      ))
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'float',
+        'weight' => -6,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'number',
+        'weight' => -6,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -337,6 +347,7 @@ class VRHotpot extends ContentEntityBase implements VrHotspotInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'entity_reference_label',
+        'weight' => -5,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'entity_reference_autocomplete',
@@ -346,6 +357,7 @@ class VRHotpot extends ContentEntityBase implements VrHotspotInterface {
           'autocomplete_type' => 'tags',
           'placeholder' => '',
         ),
+        'weight' => -5,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);

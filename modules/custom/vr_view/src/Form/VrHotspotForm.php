@@ -53,6 +53,7 @@ class VrHotspotForm extends ContentEntityForm {
         }
         $form_state->setValue('vr_view_taxonomy_default', $type_id);
         $query = \Drupal::entityQuery('vr_view');
+        $query->condition('id', $parent_vr_view->id(), '<>');
         if ($type_id) {
           $query->condition('type', $type_id, '=');
         }
@@ -67,6 +68,7 @@ class VrHotspotForm extends ContentEntityForm {
         $form_state->setValue('vr_view_options', $options);
       }
 
+      $form['vr_view_target']['#attributes']['id'] = 'dynamic-form-element';
       $form['vr_view_target']['widget'][0]['target_id'] = [
         '#title' => $this->t('Existing vr view'),
         '#description' => $this->t('Select VR view form same taxonomy type'),
@@ -74,14 +76,13 @@ class VrHotspotForm extends ContentEntityForm {
         '#required' => TRUE,
         '#empty_option' => '-Select-',
         '#options' => $form_state->getValue('vr_view_options'),
-        '#prefix' => "<div id='dynamic-form-element'>",
-        '#suffix' => "</div>",
+        '#validated' => TRUE,
       ];
       $form['yaw']['widget'][0]['value']['#default_value'] = $this->getYaw($form_state);
       $form['pitch']['widget'][0]['value']['#default_value'] = $this->getPitch($form_state);
       $form['distance']['widget'][0]['value']['#default_value'] = 1;
       $form['radius']['widget'][0]['value']['#default_value'] = 0.05;
-      $form['name']['#access'] = FALSE;
+      $form['name']['widget'][0]['value']['#description'] = $this->t('Leave blank to use default');
 
       if($taxonomy_options) {
         $form['taxonomy_selector'] = [
@@ -91,6 +92,7 @@ class VrHotspotForm extends ContentEntityForm {
           '#default_value' => $form_state->getValue('vr_view_taxonomy_default', NULL),
           '#options' => $taxonomy_options,
           '#ajax' => [
+            'wrapper' => 'dynamic-form-element',
             'callback' => [ $this, 'vrViewList' ],
             'event' => 'change',
             'progress' => [
@@ -112,12 +114,21 @@ class VrHotspotForm extends ContentEntityForm {
     return $form;
   }
 
+  /**
+   * AJAX callback for taxonomy selection.
+   * @param array $form
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   */
   public function vrViewList(array &$form, FormStateInterface $form_state) {
-    $response = new AjaxResponse();
+    //$response = new AjaxResponse();
+    $parent_vr_view = $this->getParentVrView($form_state);
     if($term_id = $form_state->getValue('taxonomy_selector')) {
       $options = [];
       $vr_view_ids = \Drupal::entityQuery('vr_view')
         ->condition('type', $term_id, '=')
+        ->condition('id', $parent_vr_view->id(), '<>')
         ->execute();
       foreach ($vr_view_ids as $vr_view_id) {
         $vr_view_entity = \Drupal::entityTypeManager()
@@ -126,9 +137,9 @@ class VrHotspotForm extends ContentEntityForm {
         $options[$vr_view_id] = $vr_view_entity->name->value;
       }
       $form['vr_view_target']['widget'][0]['target_id']['#options'] = $options;
-      $response->addCommand(new ReplaceCommand('#dynamic-form-element', $form['vr_view_target']));
+      //$response->addCommand(new ReplaceCommand('#dynamic-form-element', $form['vr_view_target']));
     }
-    return $response;
+    return $form['vr_view_target'];
   }
 
   /**

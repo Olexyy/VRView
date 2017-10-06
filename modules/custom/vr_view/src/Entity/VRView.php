@@ -134,6 +134,10 @@ use Drupal\user\UserInterface;
  */
 class VrView extends ContentEntityBase implements VrViewInterface {
 
+  const displayTypeAdmin = 'admin';
+  const displayTypeSelector = 'selector';
+  const displayTypeUser = 'user';
+
   /**
    * @inheritdoc
    *
@@ -257,38 +261,15 @@ class VrView extends ContentEntityBase implements VrViewInterface {
         'max_length' => 255,
         'text_processing' => 0,
       ))
+      ->setRequired(TRUE)
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'string',
-        'weight' => 0,
+        'weight' => -10,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'string_textfield',
-        'weight' => 0,
-      ))
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', TRUE);
-
-    // Description field for the contact.
-    $fields['description'] = BaseFieldDefinition::create('string_long')
-      ->setLabel(t('Description'))
-      ->setDescription(t('The description of the VR View entity.'))
-      ->setSettings(array(
-        'default_value' => '',
-        'max_length' => 1200,
-        'text_processing' => 0,
-      ))
-      ->setDisplayOptions('view', array(
-        'label' => 'above',
-        'type' => 'string',
-        'weight' => 0,
-      ))
-      ->setDisplayOptions('form', array(
-        'type' => 'string_textarea',
-        'weight' => 0,
-        'settings' => [
-          'rows' => 6,
-        ],
+        'weight' => -10,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -306,7 +287,7 @@ class VrView extends ContentEntityBase implements VrViewInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'vr_view_image',
-        'weight' => 0,
+        'weight' => -9,
         'settings' => array(
           'type' => 'user',
         ),
@@ -314,8 +295,9 @@ class VrView extends ContentEntityBase implements VrViewInterface {
       ->setDisplayOptions('form', array(
         'label' => 'above',
         'type' => 'image_image',
-        'weight' => 0,
+        'weight' => -9,
       ))
+      ->setRequired(TRUE)
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
@@ -332,7 +314,7 @@ class VrView extends ContentEntityBase implements VrViewInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'image',
-        'weight' => 0,
+        'weight' => -8,
         'settings' => array(
           'type' => 'admin',
         ),
@@ -340,7 +322,31 @@ class VrView extends ContentEntityBase implements VrViewInterface {
       ->setDisplayOptions('form', array(
         'label' => 'above',
         'type' => 'image_image',
-        'weight' => 0,
+        'weight' => -8,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    // Description field for the contact.
+    $fields['description'] = BaseFieldDefinition::create('string_long')
+      ->setLabel(t('Description'))
+      ->setDescription(t('The description of the VR View entity.'))
+      ->setSettings(array(
+        'default_value' => '',
+        'max_length' => 1200,
+        'text_processing' => 0,
+      ))
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'string',
+        'weight' => -7,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'string_textarea',
+        'weight' => -7,
+        'settings' => [
+          'rows' => 6,
+        ],
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -357,11 +363,11 @@ class VrView extends ContentEntityBase implements VrViewInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'float',
-        'weight' => 0,
+        'weight' => -6,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'number',
-        'weight' => 0,
+        'weight' => -6,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -374,11 +380,11 @@ class VrView extends ContentEntityBase implements VrViewInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'boolean',
-        'weight' => 0,
+        'weight' => -5,
       ))
       ->setDisplayOptions('form', array(
         'settings' => array('display_label' => TRUE),
-        'weight' => 0,
+        'weight' => -5,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -391,11 +397,11 @@ class VrView extends ContentEntityBase implements VrViewInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'boolean',
-        'weight' => 0,
+        'weight' => -4,
       ))
       ->setDisplayOptions('form', array(
         'settings' => array('display_label' => TRUE),
-        'weight' => 0,
+        'weight' => -4,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -408,11 +414,11 @@ class VrView extends ContentEntityBase implements VrViewInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'boolean',
-        'weight' => 0,
+        'weight' => -3,
       ))
       ->setDisplayOptions('form', array(
         'settings' => array('display_label' => TRUE),
-        'weight' => 0,
+        'weight' => -3,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -429,11 +435,11 @@ class VrView extends ContentEntityBase implements VrViewInterface {
       ->setDisplayOptions('view', array(
         'label' => 'hidden',
         'type' => 'author',
-        'weight' => 0,
+        'weight' => -2,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'options_select',//'entity_reference_autocomplete',
-        'weight' => 0,
+        'weight' => -2,
         'settings' => array(
           'match_operator' => 'CONTAINS',
           'size' => '10',
@@ -454,7 +460,7 @@ class VrView extends ContentEntityBase implements VrViewInterface {
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'entity_reference_label',
-        'weight' => 0,
+        'weight' => -1,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'entity_reference_autocomplete',
@@ -464,7 +470,7 @@ class VrView extends ContentEntityBase implements VrViewInterface {
           'autocomplete_type' => 'tags',
           'placeholder' => '',
         ),
-        'weight' => 0,
+        'weight' => -1,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -508,10 +514,6 @@ class VrView extends ContentEntityBase implements VrViewInterface {
     return $fields;
   }
 
-  const displayTypeAdmin = 'admin';
-  const displayTypeSelector = 'selector';
-  const displayTypeUser = 'user';
-
   public static function getDisplayDefinition($type){
     return [
       'type' => 'vr_view_image',
@@ -519,6 +521,26 @@ class VrView extends ContentEntityBase implements VrViewInterface {
         'type' => $type,
       ]
     ];
+  }
+
+  /**
+   * Getter for hotspots property.
+   * @return array
+   */
+  public function getHotspots() {
+    if(isset($this->hotspots))
+      return $this->hotspots->referencedEntities();
+    return [];
+  }
+
+  /**
+   * Getter for name property.
+   * @return string
+   */
+  public function getName() {
+    if(isset($this->name))
+      return $this->name->getValue();
+    return '';
   }
 
 }
