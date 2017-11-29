@@ -118,14 +118,14 @@ class VRViewImageFormatter extends FormatterBase {
         '#title' => 'admin actions',
         '#description' =>
           '<div id="admin-actions-links-placeholder" class="region region-secondary-menu">'
-            .Link::fromTextAndUrl(t('Add new Vr view using current pitch and yaw'), Url::fromUri("internal:/vr_view/add/{$entity->id->value}/0/0", [ 'attributes' => ['id' => 'dynamic-button-add-new', 'class' => ['button-action', 'button', 'dynamic-args'] ]]))->toString()
-            .Link::fromTextAndUrl(t('Add existing Vr view using current pitch and yaw'), Url::fromUri("internal:/vr_hotspot/add/{$entity->id->value}/0/0", [ 'attributes' => ['id' => 'dynamic-button-add-existing', 'class' => ['button-action', 'button', 'dynamic-args'] ]]))->toString()
+            .Link::fromTextAndUrl(t('Add new Vr view using current pitch and yaw'), Url::fromUri("internal:/vr_view/add/{$entity->id->value}/0/0", [ 'attributes' => ['id' => 'dynamic-button-add-new', 'class' => ['button-action', 'btn', 'button', 'dynamic-args'] ]]))->toString()
+            .Link::fromTextAndUrl(t('Add existing Vr view using current pitch and yaw'), Url::fromUri("internal:/vr_hotspot/add/{$entity->id->value}/0/0", [ 'attributes' => ['id' => 'dynamic-button-add-existing', 'class' => ['button-action', 'btn',  'button', 'dynamic-args'] ]]))->toString()
           .'</div>'
-          .'<span id="hotspots-link-placeholder">'.$this->hotspotsLinks($entity).'</span>'
+          .'<div id="hotspots-link-placeholder">'.$this->hotspotsLinks($entity).'</div>'
           //.t('Add new or edit existing hotspots, using current pitch and yaw.').'<br />'
-          .'<span id="default-yaw-link-placeholder">'
-            .Link::fromTextAndUrl(t('Make current yaw to be default'), Url::fromUri("internal:/vr_view/default_yaw/{$entity->id->value}/0", [ 'attributes' => ['id' => 'dynamic-button-default-yaw', 'class' => ['button-action', 'button', 'dynamic-args'] ]]))->toString()
-          .'</span>',
+          .'<div id="default-yaw-link-placeholder">'
+            .Link::fromTextAndUrl(t('Make current yaw to be default'), Url::fromUri("internal:/vr_view/default_yaw/{$entity->id->value}/0", [ 'attributes' => ['id' => 'dynamic-button-default-yaw', 'class' => ['button-action', 'btn', 'button', 'dynamic-args'] ]]))->toString()
+          .'</div>',
       ),
       'yaw-value-submit' => array(
         '#type' => 'hidden',
@@ -296,7 +296,7 @@ class VRViewImageFormatter extends FormatterBase {
         $html .= Link::fromTextAndUrl(
           $text,
           Url::fromUri("internal:/vr_view/{$entity->id()}/position/{$hotspot_id}/0/0", [ 'attributes' => ['hotspot' => $hotspot_id,'id' => 'modal-button-edit',
-            'class' => ['dynamic-button-hotspot-position', 'button-action', 'button', 'dynamic-args'] ]])
+            'class' => ['dynamic-button-hotspot-position', 'button-action', 'btn',  'button', 'dynamic-args'] ]])
         )->toString();
       }
     }

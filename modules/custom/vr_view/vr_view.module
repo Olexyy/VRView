@@ -1,0 +1,17 @@
+<?php
+
+/**
+* Implements hook_views_data_alter().
+*/
+function vr_view_views_data_alter(array &$data) {
+
+  $data['taxonomy_term_data']['vr_view']['relationship'] = [
+    'title' => 'Vr View relationship',
+    'help' => 'Join User and Player entities by email',
+    'base' => 'vr_view',
+    'base field' => 'type',
+    'field' => 'tid',
+    'id' => 'standard',
+  ];
+
+}

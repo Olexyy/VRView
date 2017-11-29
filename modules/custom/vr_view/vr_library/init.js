@@ -111,7 +111,7 @@ function loadScene(id) {
             if (hotspots.hasOwnProperty(hotspot)) {
                 var new_link = document.createElement('A');
                 new_link.innerHTML = 'Set current pitch and yaw to: ' + hotspots[hotspot]['name'];
-                new_link.setAttribute('class', 'dynamic-button-hotspot-position button-action button dynamic-args');
+                new_link.setAttribute('class', 'dynamic-button-hotspot-position btn button-action button dynamic-args');
                 new_link.setAttribute('hotspot', hotspots[hotspot]['id']);
                 new_link.setAttribute('href', linkHotspotPosition + '/' + hotspots[hotspot]['id'] + newEnding);
                 document.getElementById('hotspots-link-placeholder').appendChild(new_link);
